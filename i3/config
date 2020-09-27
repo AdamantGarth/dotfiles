@@ -1,0 +1,220 @@
+# i3 config file
+
+# ------------------------ #
+# Global settings / Tweaks #
+# ------------------------ #
+
+# Modifier key
+set $mod Mod4
+
+# i3 font
+font pango:monospace 10
+
+# Hide borders at screen edges
+hide_edge_borders both
+
+# Disable focus stealing prevention
+focus_on_window_activation focus
+
+# Enable workspace back-and-forth behavior
+workspace_auto_back_and_forth yes
+
+# Screen locking command
+set $lock_screen i3lock -i ~/Pictures/Wallpapers/Win10.png -p win
+
+# ------------------ #
+# System keybindings #
+# ------------------ #
+
+# Brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl s +5% && ~/.config/i3/scripts/brightness-notify.sh
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%- && ~/.config/i3/scripts/brightness-notify.sh
+
+# Volume
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && ~/.config/i3/scripts/volume-notify.sh
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && ~/.config/i3/scripts/volume-notify.sh
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && ~/.config/i3/scripts/volume-notify.sh
+
+# Reload i3 config
+bindsym $mod+Shift+c reload
+
+# Restart i3
+bindsym $mod+Shift+r restart
+
+# System prompt
+set $mode_system System (l) lock, (e) exit, (s) suspend, (r) reboot, (S) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $lock_screen, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"  
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Shift+e mode "$mode_system"
+
+# --------------- #
+# Window controls #
+# --------------- #
+
+# Kill window
+bindsym $mod+Shift+q kill
+bindsym Mod1+F4 kill
+
+# Focus window
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+# Same using arrows
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+# Same using arrows
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Resize window
+bindsym $mod+Control+j resize shrink width 2 px or 2 ppt
+bindsym $mod+Control+k resize grow height 2 px or 2 ppt
+bindsym $mod+Control+l resize shrink height 2 px or 2 ppt
+bindsym $mod+Control+semicolon resize grow width 2 px or 2 ppt
+# Same using arrows
+bindsym $mod+Control+Left resize shrink width 2 px or 2 ppt
+bindsym $mod+Control+Down resize grow height 2 px or 2 ppt
+bindsym $mod+Control+Up resize shrink height 2 px or 2 ppt
+bindsym $mod+Control+Right resize grow width 2 px or 2 ppt
+
+# Splits
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+# Layouts
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Floating modifier
+floating_modifier $mod
+# Make window floating/tiling
+bindsym $mod+Shift+space floating toggle
+# Toggle focus between tiling/floating windows
+bindsym $mod+space focus mode_toggle
+
+# Toggle fullscreen
+bindsym $mod+f fullscreen toggle
+
+# Focus parent and child containers
+bindsym $mod+a focus parent
+bindsym $mod+z focus child
+
+# Scratchpad
+bindsym Mod4+Tab move scratchpad
+bindsym Mod1+Tab scratchpad show
+
+# Jump to urgent window
+bindsym $mod+u [urgent=latest] focus
+
+# ---------- #
+# Workspaces #
+# ---------- #
+
+# Defining workspaces
+set $ws1 "  1  "
+set $ws2 "  2  "
+set $ws3 "  3  " 
+set $ws4 "  4  "
+set $ws5 "  5  "
+set $ws6 "  6  "
+set $ws7 "  7  "
+set $ws8 "  8  "
+set $ws9 "  9  "
+set $ws10 "  10  "
+
+# Switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# Move container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# ---------- #
+# Info panel #
+# ---------- #
+bar {
+    status_command i3status
+    font pango:Liberation Mono, Font Awesome 5 Free Solid 11
+}
+
+# --------- #
+# Autostart #
+# --------- #
+
+exec --no-startup-id xset r rate 400 40
+exec --no-startup-id xset dpms 0 0 600
+exec --no-startup-id "setxkbmap -layout us,ru,ua -option grp:caps_toggle"
+exec --no-startup-id hsetroot -solid "#282828"
+
+exec --no-startup-id picom -bCG
+exec --no-startup-id dunst
+exec --no-startup-id nm-applet
+exec --no-startup-id "akd -gar -l us,ru us,ua -n Meta+grave"
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+# ----------------- #
+# Program launchers #
+# ----------------- #
+
+# Rofi
+bindsym $mod+d exec "rofi -normal-window -modi drun,run -show drun"
+
+# Web browser
+bindsym $mod+F1 exec chromium
+bindsym $mod+Shift+F1 exec chromium --incognito
+
+# Terminal
+bindsym $mod+F2 exec xfce4-terminal
+bindsym $mod+Return exec xfce4-terminal
+
+# File manager
+bindsym $mod+F3 exec thunar
+
+# Screen locker
+bindsym Control+Mod1+l exec --no-startup-id $lock_screen
+
+# --------------------- #
+# Window-specific rules #
+# --------------------- #
+for_window [class="Rofi"] floating enable
+for_window [class="Chromium"] border pixel 1
+for_window [class="VirtualBox Machine"] border pixel 1
+for_window [class="KeePassXC"] floating enable
