@@ -1,0 +1,1 @@
+/home/discussian/Build/gruvbox/colors/gruvbox.vim
