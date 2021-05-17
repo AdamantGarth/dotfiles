@@ -1,0 +1,208 @@
+###
+### VARIABLES
+###
+set $mod Mod4
+
+set $left  h
+set $down  j
+set $up    k
+set $right l
+
+# Programs
+set $terminal gnome-terminal
+set $launcher wofi --gtk-dark --show drun
+
+###
+### MONITORS
+###
+# Default wallpaper
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+
+###
+### POWER MANAGEMENT
+###
+exec swayidle -w \
+	timeout 600 'swaylock -f -c 282828' \
+	timeout 630 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+	before-sleep 'swaylock -f -c 282828'
+
+# Create a mod for exiting from the system
+set $mode_exit "System: (l) lock, (e) exit, (s) suspend, (r) reload, (R) reboot, (S) shutdown"
+mode $mode_exit {
+	bindsym --to-code {
+		l exec --no-startup-id 'swaylock -f -c 282828',     mode "default"
+		e exec --no-startup-id swaymsg exit,                mode "default"
+		s exec --no-startup-id systemctl suspend,           mode "default"
+		r reload,                                           mode "default"
+		Shift+r exec --no-startup-id systemctl reboot,      mode "default"
+		Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
+		# back to normal: Enter or Escape
+		Return mode "default"
+		Escape mode "default"
+	}
+}
+
+###
+### INPUT DEVICES
+###
+input "type:keyboard" {
+	xkb_layout us,ua,ru
+	xkb_options grp:caps_toggle
+	repeat_delay 400
+	repeat_rate 40
+}
+
+input "type:touchpad" {
+	dwt enabled
+	tap enabled
+	natural_scroll enabled
+	# accel_profile "flat"
+	# pointer_accel 0.5
+
+}
+
+###
+### KEY BINDINGS
+###
+# System
+bindsym --to-code {
+	$mod+Shift+q kill
+	$mod+Shift+e mode $mode_exit
+}
+
+# Widow management
+bindsym --to-code {
+	# Change focus
+	$mod+$left focus left
+	$mod+$down focus down
+	$mod+$up focus up
+	$mod+$right focus right
+	# Same using arrows
+	$mod+Left focus left
+	$mod+Down focus down
+	$mod+Up focus up
+	$mod+Right focus right
+
+	# Move focused container
+	$mod+Shift+$left move left
+	$mod+Shift+$down move down
+	$mod+Shift+$up move up
+	$mod+Shift+$right move right
+	# Same using arrows
+	$mod+Shift+Left move left
+	$mod+Shift+Down move down
+	$mod+Shift+Up move up
+	$mod+Shift+Right move right
+
+	# Resize focused container
+	$mod+Control+$left  resize shrink width  10px
+	$mod+Control+$down  resize grow   height 10px
+	$mod+Control+$up    resize shrink height 10px
+	$mod+Control+$right resize grow   width  10px
+	# Same using arrows
+	$mod+Control+Left   resize shrink width  10px
+	$mod+Control+Down   resize grow   height 10px
+	$mod+Control+Up     resize shrink height 10px
+	$mod+Control+Right  resize grow   width  10px
+
+	# Switch to workspace
+	$mod+1 workspace number 1
+	$mod+2 workspace number 2
+	$mod+3 workspace number 3
+	$mod+4 workspace number 4
+	$mod+5 workspace number 5
+	$mod+6 workspace number 6
+	$mod+7 workspace number 7
+	$mod+8 workspace number 8
+	$mod+9 workspace number 9
+	$mod+0 workspace number 10
+	# Move focused container to workspace
+	$mod+Shift+1 move container to workspace number 1
+	$mod+Shift+2 move container to workspace number 2
+	$mod+Shift+3 move container to workspace number 3
+	$mod+Shift+4 move container to workspace number 4
+	$mod+Shift+5 move container to workspace number 5
+	$mod+Shift+6 move container to workspace number 6
+	$mod+Shift+7 move container to workspace number 7
+	$mod+Shift+8 move container to workspace number 8
+	$mod+Shift+9 move container to workspace number 9
+	$mod+Shift+0 move container to workspace number 10
+
+	# Split container
+	$mod+b splith
+	$mod+v splitv
+	# Change layout of the current container
+	$mod+s layout stacking
+	$mod+w layout tabbed
+	$mod+e layout toggle split
+	# Make currently focused window fullscreen
+	$mod+f fullscreen
+
+	# Move focus to the parent container
+	$mod+a focus parent
+}
+
+# Floating (and mouse resizing) modifier
+floating_modifier $mod normal
+# Floating shortcuts
+bindsym --to-code {
+	$mod+Shift+space floating toggle
+	$mod+space focus mode_toggle
+}
+
+# Scratchpad
+bindsym --to-code {
+	$mod+Shift+minus move scratchpad
+	$mod+minus scratchpad show
+}
+
+# System controls
+bindsym --to-code {
+	# Brightness
+	XF86MonBrightnessUp exec --no-startup-id brightnessctl s +5% && ~/.config/sway/scripts/brightness-notify.sh
+	XF86MonBrightnessDown exec --no-startup-id brightnessctl s 5%- && ~/.config/sway/scripts/brightness-notify.sh
+	# Volume
+	XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && ~/.config/sway/scripts/volume-notify.sh
+	XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && ~/.config/sway/scripts/volume-notify.sh
+	XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && ~/.config/sway/scripts/volume-notify.sh
+}
+
+# Program launchers
+bindsym --to-code {
+	$mod+d      exec $launcher
+	$mod+Return exec $terminal
+}
+
+###
+### SWAY TWEAKS
+###
+
+hide_edge_borders both
+focus_on_window_activation focus
+workspace_auto_back_and_forth yes
+
+###
+### WINDOW RULES
+###
+
+for_window [app_id="firefox"] border pixel 1
+
+###
+### STATUS BAR
+###
+bar {
+    position bottom
+    status_command i3status
+
+    colors {
+        statusline #ffffff
+        background #323232
+        inactive_workspace #32323200 #32323200 #5c5c5c
+    }
+}
+###
+
+###
+### Include global config.d
+###
+include /etc/sway/config.d/*
