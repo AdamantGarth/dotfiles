@@ -56,6 +56,7 @@ input "type:touchpad" {
 	dwt enabled
 	tap enabled
 	natural_scroll enabled
+	scroll_factor 0.5
 	# accel_profile "flat"
 	# pointer_accel 0.5
 
@@ -185,6 +186,8 @@ workspace_auto_back_and_forth yes
 ### WINDOW RULES
 ###
 
+for_window [app_id="Chromium"] border pixel 1
+for_window [class="Chromium"] border pixel 1
 for_window [app_id="firefox"] border pixel 1
 
 ###
@@ -192,7 +195,9 @@ for_window [app_id="firefox"] border pixel 1
 ###
 bar {
     position bottom
+    # swaybar_command waybar
     status_command i3status
+    tray_output none
 
     colors {
         statusline #ffffff
@@ -201,6 +206,13 @@ bar {
     }
 }
 ###
+
+###
+### AUTOSTART
+###
+
+exec --no-startup-id dunst
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 ###
 ### Include global config.d

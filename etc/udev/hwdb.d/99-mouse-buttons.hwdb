@@ -1,0 +1,6 @@
+# Format: evdev:input:b*v<vendor>p<product>*
+
+# GTech MI wireless mouse Mouse:
+# * Re-bind BTN_SIDE to BTN_MIDDLE
+evdev:input:b*v2717p5001*
+ KEYBOARD_KEY_90004=btn_middle
